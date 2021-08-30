@@ -5,6 +5,13 @@ export default function App() {
   const path = window.location.pathname;
   return (
     <>
+    <div>
+      <a href="/modal1">Show modal component 1</a>&nbsp;
+      <a href="/modal2">Show modal component 2</a>&nbsp;
+      <a href="/modal3">Show modal component 3</a>
+      <br />
+      <br />
+    </div>
       {(path === '/modal1' || path === '/') &&
         <>
           <ModalButton modalId="modal1">Open Modal</ModalButton>
@@ -16,12 +23,21 @@ export default function App() {
           <button
             type="button"
             className="usa-button"
-            aria-controls="modal2"
+            aria-controls="modal2-1"
             data-open-modal
           >
-            Open Modal
+            Open Modal 1
           </button>
-          <Modal2 id="modal2" />
+          <button
+            type="button"
+            className="usa-button"
+            aria-controls="modal2-2"
+            data-open-modal
+          >
+            Open Modal 2
+          </button>
+          <Modal2 id="modal2-1" />
+          <Modal2 id="modal2-2" />
         </>
       }
       {path === '/modal3' &&
