@@ -1,241 +1,67 @@
-import React, { useEffect, useRef } from 'react';
-import { modal } from '../node_modules/uswds/src/js/components';
+import { useEffect, useState } from 'react'
+import { modal, comboBox } from '../node_modules/uswds/src/js/components'
+import ComboBox from './ComboBox'
+import Modal from './Modal'
+import '../node_modules/uswds/dist/css/uswds.min.css'
 
-export default function App() {
-  const path = window.location.pathname;
+const Page1 = () => {
   return (
-    <>
     <div>
-      <a href="/modal1">Show modal component 1</a>&nbsp;
-      <a href="/modal2">Show modal component 2</a>&nbsp;
-      <a href="/modal3">Show modal component 3</a>
-      <br />
-      <br />
+      <Modal name="modal-one"/>
+      <Modal name="modal-two"/>
+      <Modal name="modal-three"/>
     </div>
-      {(path === '/modal1' || path === '/') &&
-        <>
-          <ModalButton modalId="modal1">Open Modal</ModalButton>
-          <Modal1 id="modal1" />
-        </>
-      }
-      {path === '/modal2' &&
-        <>
-          <button
-            type="button"
-            className="usa-button"
-            aria-controls="modal2-1"
-            data-open-modal
-          >
-            Open Modal 1
-          </button>
-          <button
-            type="button"
-            className="usa-button"
-            aria-controls="modal2-2"
-            data-open-modal
-          >
-            Open Modal 2
-          </button>
-          <Modal2 id="modal2-1" />
-          <Modal2 id="modal2-2" />
-        </>
-      }
-      {path === '/modal3' &&
-        <>
-          <ModalContainer>
-            <button
-              type="button"
-              className="usa-button"
-              aria-controls="modal3"
-              data-open-modal
-            >
-              Open Modal
-            </button>
-            <div
-              className="usa-modal"
-              id="modal3"
-              aria-labelledby="modal3-heading"
-              aria-describedby="modal3-description"
-            >
-              <div className="usa-modal__content">
-                <div className="usa-modal__main">
-                  <h2 className="usa-modal__heading" id="modal3-heading">
-                    Lorem
-                  </h2>
-                  <div className="usa-prose">
-                    <p id="modal3-description">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Natus molestiae incidunt, sit eos reprehenderit, debitis culpa, omnis laboriosam repellat quas dolorem! Consequuntur nihil modi dolorum temporibus itaque? Pariatur, sunt itaque?</p>
-                  </div>
-                  <div className="usa-modal__footer">
-                    <ul className="usa-button-group">
-                      <li className="usa-button-group__item">
-                        <button type="button" className="usa-button" data-close-modal>
-                          Continue without saving
-                        </button>
-                      </li>
-                      <li className="usa-button-group__item">
-                        <button
-                          type="button"
-                          className="usa-button usa-button--unstyled padding-105 text-center"
-                          data-close-modal
-                        >
-                          Go back
-                        </button>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </ModalContainer>
-        </>
-      }
-    </>
-  );
+  )
 }
 
-const ModalButton = function ({ modalId, children }) {
-  const modalButtonRef = useRef();
-  useEffect(() => {
-    const modalButtonElement = modalButtonRef.current;
-    modal.on(modalButtonElement);
-    return () => {
-      modal.off(modalButtonElement);
-    };
-  });
+const Page2 = () => {
   return (
-    <button
-      type="button"
-      className="usa-button"
-      aria-controls={modalId}
-      data-open-modal
-      ref={modalButtonRef}
-    >
-      {children}
-    </button>
-  );
+    <div>
+      <Modal name="modal-four"/>
+      <ComboBox name="combo-box-one"/>
+      <ComboBox name="combo-box-two"/>
+    </div>
+  )
 }
 
-const Modal1 = function ({ id }) {
-  const modalRef = useRef();
+const App = () => {
+  const [page, setPage] = useState(true)
+
+  // when we call modal.off() we are just removing the
+  // event listener, but when react unmounts, the nodes
+  // created in the DOM still remain. So we have to remove
+  // them durring the effect cleanup
+  const handleModalCleanup = () => {
+    modal.off() // not sure this is tottally necessary here
+    const modals = document.querySelectorAll('[role="dialog"]')
+    Array.from(modals, x => x.remove())
+  }
+
   useEffect(() => {
-    const modalElement = modalRef.current;
-    modal.on(modalElement);
+    modal.on()
+    comboBox.on()
     return () => {
-      modal.off(modalElement);
-    };
-  });
-  // empty div because React will try to remove .usa-modal from this components parent, but USWDS already moved .usa-modal elsewhere
-  return (
-    <div style={{ display: 'none' }}>
-      <div
-        className="usa-modal"
-        id={id}
-        aria-labelledby={`${id}-heading`}
-        aria-describedby={`${id}-description`}
-        ref={modalRef}
-      >
-        <div className="usa-modal__content">
-          <div className="usa-modal__main">
-            <h2 className="usa-modal__heading" id={`${id}-heading`}>
-              Lorem
-            </h2>
-            <div className="usa-prose">
-              <p id={`${id}-description`}>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Natus molestiae incidunt, sit eos reprehenderit, debitis culpa, omnis laboriosam repellat quas dolorem! Consequuntur nihil modi dolorum temporibus itaque? Pariatur, sunt itaque?</p>
-            </div>
-            <div className="usa-modal__footer">
-              <ul className="usa-button-group">
-                <li className="usa-button-group__item">
-                  <button type="button" className="usa-button" data-close-modal>
-                    Continue without saving
-                  </button>
-                </li>
-                <li className="usa-button-group__item">
-                  <button
-                    type="button"
-                    className="usa-button usa-button--unstyled padding-105 text-center"
-                    data-close-modal
-                  >
-                    Go back
-                  </button>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-const Modal2 = function ({ id }) {
-  const modalRef = useRef();
-  useEffect(() => {
-    const modalElement = modalRef.current;
-    // initialize all modals (same as passing in document.body)
-    modal.on();
-    return () => {
-      // de-initialize all modals (same as passing in document.body)
-      modal.off();
-      // remove modal wrapper element from document.body
-      document.body.removeChild(modalElement.parentElement.parentElement);
+      handleModalCleanup()
+      comboBox.off()
     }
-  });
-  // empty div because React will try to remove .usa-modal from this components parent, but USWDS already moved .usa-modal elsewhere
+  }, [page])
+
   return (
-    <div style={{ display: 'none' }}>
-      <div
-        className="usa-modal"
-        id={id}
-        aria-labelledby={`${id}-heading`}
-        aria-describedby={`${id}-description`}
-        ref={modalRef}
-      >
-        <div className="usa-modal__content">
-          <div className="usa-modal__main">
-            <h2 className="usa-modal__heading" id={`${id}-heading`}>
-              Lorem
-            </h2>
-            <div className="usa-prose">
-              <p id={`${id}-description`}>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Natus molestiae incidunt, sit eos reprehenderit, debitis culpa, omnis laboriosam repellat quas dolorem! Consequuntur nihil modi dolorum temporibus itaque? Pariatur, sunt itaque?</p>
-            </div>
-            <div className="usa-modal__footer">
-              <ul className="usa-button-group">
-                <li className="usa-button-group__item">
-                  <button type="button" className="usa-button" data-close-modal>
-                    Continue without saving
-                  </button>
-                </li>
-                <li className="usa-button-group__item">
-                  <button
-                    type="button"
-                    className="usa-button usa-button--unstyled padding-105 text-center"
-                    data-close-modal
-                  >
-                    Go back
-                  </button>
-                </li>
-              </ul>
-            </div>
-          </div>
+    <div className="grid-container">
+      <div className="grid-row">
+        <div className="grid-col">
+          {!page
+            ? <Page2/>
+            : <Page1/>
+          }
         </div>
       </div>
+      <button
+        className="usa-button"
+        onClick={(e) => setPage(!page)}>Toggle Page</button>
     </div>
-  );
-};
+  )
+}
 
-const ModalContainer = function ({ children }) {
-  const modalContainerRef = useRef();
-  useEffect(() => {
-    const modalContainerElement = modalContainerRef.current;
-    const modalElements = modalContainerElement.querySelectorAll('.usa-modal');
-    modal.on(modalContainerElement);
-    return () => {
-      modal.off(modalContainerElement);
-      modalElements.forEach((modalElement) => {
-        document.body.removeChild(modalElement.parentElement.parentElement);
-      });
-    };
-  });
-  return (
-    <div ref={modalContainerRef}>{children}</div>
-  );
-};
+export default App
+
