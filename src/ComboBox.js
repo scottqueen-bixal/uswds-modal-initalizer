@@ -1,6 +1,19 @@
+import { useEffect, useRef } from 'react';
+import { comboBox } from '../node_modules/uswds/src'
+
 const ComboBox = ({ name }) => {
+  const comboBoxRef = useRef()
+
+  useEffect(() => {
+    const comboBoxElement = comboBoxRef.current;
+    comboBox.on(comboBoxElement)
+    return () => {
+      comboBox.off(comboBoxElement)
+    }
+  }, [comboBoxRef])
+
     return (
-    <div id={name}>
+    <div id={name} ref={comboBox}>
       <label className="usa-label" htmlFor={name}>
         Select a fruit for {name}
       </label>

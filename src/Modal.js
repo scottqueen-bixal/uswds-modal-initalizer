@@ -1,4 +1,17 @@
-const Modal = function ({ name }) {
+import { useEffect, useRef } from 'react';
+import { modal } from '../node_modules/uswds/src'
+
+const Modal = ({ name }) => {
+  const modalRef = useRef()
+
+  useEffect(() => {
+    const modalElement = modalRef.current;
+    modal.on(modalElement)
+    return () => {
+      modal.off(modalElement)
+    }
+  }, [modalRef])
+
   return (
     <>
     <a
@@ -12,6 +25,7 @@ const Modal = function ({ name }) {
       id={name}
       aria-labelledby={`${name}-heading`}
       aria-describedby={`${name}-description`}
+      ref={modalRef}
     >
     <div className="usa-modal__content">
       <div className="usa-modal__main">

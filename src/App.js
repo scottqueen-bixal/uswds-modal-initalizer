@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react'
-import { modal, comboBox } from '../node_modules/uswds/src'
+import { useState } from 'react'
 import ComboBox from './ComboBox'
 import Modal from './Modal'
 import '../node_modules/uswds/dist/css/uswds.min.css'
@@ -26,15 +25,6 @@ const Page2 = () => {
 
 const App = () => {
   const [page, setPage] = useState(true)
-
-  useEffect(() => {
-    modal.on()
-    comboBox.on()
-    return () => {
-      modal.off()
-      comboBox.off()
-    }
-  }, [page])
 
   return (
     <div className="grid-container">
